@@ -1,0 +1,107 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Queue {
+    struct Node* front; // Pointer to the front of the queue
+    struct Node* rear;  // Pointer to the rear of the queue
+};
+
+// Function to create a new node
+struct Node* createNode(int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to create an empty queue
+struct Queue* createQueue() {
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->front = queue->rear = NULL;
+    return queue;
+}
+
+// Function to add an item to the queue
+void enqueue(struct Queue* queue, int data) {
+    struct Node* newNode = createNode(data);
+    if (queue->rear == NULL) {
+        queue->front = queue->rear = newNode; // Queue is empty
+        return;
+    }
+    queue->rear->next = newNode; // Add the new node at the end
+    queue->rear = newNode;        // Update the rear pointer
+}
+
+// Function to remove an item from the queue
+int dequeue(struct Queue* queue) {
+    if (queue->front == NULL) {
+        printf("Queue is empty!\n");
+        return -1; // Return -1 to indicate the queue is empty
+    }
+    struct Node* temp = queue->front;
+    int data = temp->data;
+    queue->front = queue->front->next; // Move front to the next node
+    if (queue->front == NULL) {
+        queue->rear = NULL; // If the queue is empty, update rear
+    }
+    free(temp); // Free the memory of the dequeued node
+    return data; // Return the data of the dequeued node
+}
+
+// Function to display the queue
+void display(struct Queue* queue) {
+    struct Node* temp = queue->front;
+    if (temp == NULL) {
+        printf("Queue is empty!\n");
+        return;
+    }
+    printf("Queue: ");
+    while (temp != NULL) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Queue* queue = createQueue();
+    int choice, data;
+
+    do {
+        printf("1. Enqueue\n");
+        printf("2. Dequeue\n");
+        printf("3. Display\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter data to enqueue: ");
+                scanf("%d", &data);
+                enqueue(queue, data);
+                break;
+            case 2:
+                data = dequeue(queue);
+                if (data != -1) {
+                    printf("Dequeued: %d\n", data);
+                }
+                break;
+            case 3:
+                display(queue);
+                break;
+            case 4:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 4);
+
+    return 0;
+}

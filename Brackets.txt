@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+
+#define SIZE 100
+
+struct stack {
+    int top;
+    char items[SIZE];
+};
+
+void initStack(struct stack *s) {
+    s->top = -1;
+}
+
+int isEmpty(struct stack *s) {
+    return (s->top == -1);
+}
+
+int isFull(struct stack *s) {
+    return (s->top == SIZE - 1);
+}
+
+void push(struct stack *s, char c) {
+    if (isFull(s)) {
+        printf("\nStack Overflow!\n");
+    } else {
+        s->items[++(s->top)] = c;
+    }
+}
+
+char pop(struct stack *s) {
+    if (isEmpty(s)) {
+        printf("\nStack Underflow!\n");
+        return -1; 
+    } else {
+        return s->items[(s->top)--];
+    }
+}
+
+int isMatchingPair(char left, char right) {
+    return ((left == '(' && right == ')') ||
+            (left == '{' && right == '}') ||
+            (left == '[' && right == ']'));
+}
+
+int areParenthesesBalanced(char* expr) {
+    struct stack s;
+    initStack(&s);
+
+    for (int i = 0; expr[i] != '\0'; i++) {
+        char c = expr[i];
+
+        if (c == '(' || c == '{' || c == '[') {
+            push(&s, c);
+        } else if (c == ')' || c == '}' || c == ']') {
+            if (isEmpty(&s) || !isMatchingPair(pop(&s), c)) {
+                return 0;
+            }
+        }
+    }
+
+    return isEmpty(&s);
+}
+
+int main() {
+    char expr[SIZE];
+
+    printf("Enter an expression with parentheses: ");
+    gets(expr);
+
+    if (areParenthesesBalanced(expr)) {
+        printf("\nParentheses are balanced.\n");
+    } else {
+        printf("\nParentheses are NOT balanced.\n");
+    }
+
+    getch();
+    return 0;
+}

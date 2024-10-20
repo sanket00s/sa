@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 100
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Graph {
+    struct Node* adjLists[MAX];
+    int visited[MAX];
+};
+
+struct Node* createNode(int data) {
+    struct Node* newNode = malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void addEdge(struct Graph* graph, int src, int dest) {
+    struct Node* newNode = createNode(dest);
+    newNode->next = graph->adjLists[src];
+    graph->adjLists[src] = newNode;
+}
+
+void bfs(struct Graph* graph, int start) {
+    int queue[MAX], front = 0, rear = 0;
+    graph->visited[start] = 1; // Mark the starting vertex as visited
+    queue[rear++] = start; // Enqueue the starting vertex
+
+    printf("BFS: ");
+    while (front < rear) {
+        int curr = queue[front++]; // Dequeue a vertex
+        printf("%d ", curr); // Print the current vertex
+
+        for (struct Node* temp = graph->adjLists[curr]; temp; temp = temp->next) {
+            if (!graph->visited[temp->data]) {
+                graph->visited[temp->data] = 1; // Mark it visited
+                queue[rear++] = temp->data; // Enqueue the vertex
+            }
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    struct Graph* graph = malloc(sizeof(struct Graph));
+    int vertices, edges, src, dest;
+
+    printf("Enter number of vertices: ");
+    scanf("%d", &vertices);
+    for (int i = 0; i < vertices; i++) {
+        graph->adjLists[i] = NULL; // Initialize adjacency lists
+        graph->visited[i] = 0; // Initialize visited array
+    }
+
+    printf("Enter number of edges: ");
+    scanf("%d", &edges);
+    printf("Enter edges (src dest):\n");
+    for (int i = 0; i < edges; i++) {
+        scanf("%d %d", &src, &dest);
+        addEdge(graph, src, dest); // Add edges to the graph
+    }
+
+    printf("BFS starting from vertex 0:\n");
+    bfs(graph, 0); // Start BFS from vertex 0
+
+    return 0;
+}

@@ -1,0 +1,149 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node* next;
+};
+
+struct node* insert_beg(struct node* head) {
+    struct node* ptr, * temp;
+    ptr = (struct node*)malloc(sizeof(struct node));
+    int data;
+    printf("Enter data: ");
+    scanf("%d", &data);
+    ptr->data = data;
+
+    if (head == NULL) {  // Handling empty list
+        ptr->next = ptr;
+        return ptr;
+    }
+
+    temp = head;
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+    temp->next = ptr;
+    ptr->next = head;
+    head = ptr;
+    return head;
+}
+
+struct node* insert_end(struct node* head) {
+    struct node* ptr, * temp;
+    ptr = (struct node*)malloc(sizeof(struct node));
+    int data;
+    printf("Enter data: ");
+    scanf("%d", &data);
+    ptr->data = data;
+
+    if (head == NULL) {  // Handling empty list
+        ptr->next = ptr;
+        return ptr;
+    }
+
+    temp = head;
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+    temp->next = ptr;
+    ptr->next = head;
+    return head;
+}
+
+struct node* delete_beg(struct node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return head;
+    }
+
+    struct node* ptr = head, * temp = head;
+    if (head->next == head) {  // Only one element in the list
+        free(head);
+        return NULL;
+    }
+
+    while (temp->next != head) {
+        temp = temp->next;
+    }
+    temp->next = head->next;
+    head = head->next;
+    free(ptr);
+    return head;
+}
+
+struct node* delete_end(struct node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return head;
+    }
+
+    struct node* ptr = head;
+    if (head->next == head) {  // Only one element in the list
+        free(head);
+        return NULL;
+    }
+
+    while (ptr->next->next != head) {
+        ptr = ptr->next;
+    }
+    free(ptr->next);
+    ptr->next = head;
+    return head;
+}
+
+void display(struct node* head) {
+    if (head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    struct node* ptr = head;
+    do {
+        printf("%d ", ptr->data);
+        ptr = ptr->next;
+    } while (ptr != head);
+    printf("\n");
+}
+
+int main() {
+    int choice;
+    struct node* head = NULL;  // Initialized head to NULL
+
+    do {
+        printf("MENU CHOICE\n");
+        printf("1. Insert beg\n");
+        printf("2. Insert end\n");
+        printf("3. Delete beg\n");
+        printf("4. Delete end\n");
+        printf("5. Display\n");
+        printf("6. EXIT\n");
+        printf("Enter your choice:\n");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                head = insert_beg(head);
+                break;
+            case 2:
+                head = insert_end(head);
+                break;
+            case 3:
+                head = delete_beg(head);
+                break;
+            case 4:
+                head = delete_end(head);
+                break;
+            case 5:
+                display(head);
+                break;
+            case 6:
+                printf("Exiting...\n");
+                break;
+            default:
+                printf("Invalid choice\n");
+        }
+    } while (choice != 6);
+
+    return 0;
+}

@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX 5
+
+struct stack{
+    int size[MAX];
+    int top;
+};
+
+void init(struct stack *s){
+    s->top=-1;
+}
+
+void push(struct stack *s, int value){
+    if(s->top==MAX-1){
+        printf("\nStack overflow\n");
+    }
+    else{
+        s->size[++(s->top)]=value;
+        printf("%d pushed into stack\n", &value);
+    }
+}
+
+int pop(struct stack *s){
+    if(s->top==-1){
+        printf("Stack underflow\n");
+        return -1;
+    }
+    else{
+        int popped=s->size[(s->top)--];
+        printf("Popped successfully\n");
+        return popped;
+    }
+}
+
+int peek(struct stack *s){
+    if(s->top==-1){
+        printf("Stack is empty\n");
+    }
+    else{
+        return s->size[s->top];
+    }
+}
+
+int main(){
+    struct stack s;
+    init(&s);
+
+    int choice, value;
+
+    while(1){
+        printf("Choose an operation:\n1. Push\n2. Pop\n3. Peek\n4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", & choice);
+
+        switch(choice){
+            case 1: 
+            printf("\nEnter value to be pushed: ");
+            scanf("%d", &value);
+            push(&s, value);
+            break;
+
+            case 2: 
+            pop(&s);
+            break;
+
+            case 3:
+            value=peek(&s);
+            if(value!=-1){
+                printf("Top element is %d\n", value);
+                break;
+            }
+
+            case 4: 
+            exit(0);
+
+            default:
+            printf("Invalid choice\n");
+        }
+    }
+    return 0;
+}
